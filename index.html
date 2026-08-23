@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="CyberMercenaries - Web Design, Development & Cybersecurity from Agartala, Tripura">
+  <title>CyberMercenaries</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <!-- ============================================
+       NAV — Fixed header with brand + navigation
+       ============================================ -->
+  <header class="nav" id="nav" role="banner">
+    <div class="nav__inner">
+      <a href="/" class="nav__brand" aria-label="CyberMercenaries Home">CyberMercenaries</a>
+      <nav class="nav__links" aria-label="Main navigation">
+        <a href="#services" class="nav__link">Services</a>
+        <a href="#pricing" class="nav__link">Pricing</a>
+        <a href="#work" class="nav__link">Work</a>
+        <a href="#about" class="nav__link">About</a>
+        <a href="#contact" class="nav__link">Contact</a>
+      </nav>
+      <button class="nav__toggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-menu">
+        <span class="nav__toggle-line"></span>
+        <span class="nav__toggle-line"></span>
+        <span class="nav__toggle-line"></span>
+      </button>
+    </div>
+    <!-- Mobile overlay menu -->
+    <div class="nav__overlay" id="nav-menu" role="dialog" aria-label="Navigation menu" hidden>
+      <nav class="nav__overlay-inner" aria-label="Mobile navigation">
+        <a href="#services" class="nav__overlay-link">Services</a>
+        <a href="#pricing" class="nav__overlay-link">Pricing</a>
+        <a href="#work" class="nav__overlay-link">Work</a>
+        <a href="#about" class="nav__overlay-link">About</a>
+        <a href="#contact" class="nav__overlay-link">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ============================================
+         HERO — Two-line headline, eyebrow corners, CTA, service preview cards
+         ============================================ -->
+    <section class="hero" id="hero" aria-labelledby="hero-title">
+      <div class="hero__bg" aria-hidden="true"></div>
+      <!-- Eyebrow labels - absolute positioned corners -->
+      <div class="hero__eyebrow hero__eyebrow--left" aria-hidden="true">01. WEB & SECURITY</div>
+      <div class="hero__eyebrow hero__eyebrow--right" aria-hidden="true">02. AGARTALA BASED</div>
+      
+      <div class="hero__content">
+        <h1 id="hero-title" class="hero__headline">
+          <span class="hero__headline-line hero__headline-line--primary">We Build Digital<br>Fortresses</span>
+          <span class="hero__headline-line hero__headline-line--secondary">Design. Develop. Defend.</span>
+        </h1>
+        
+        <div class="hero__bottom">
+          <div class="hero__contact">
+            <a href="mailto:[email]" class="hero__contact-link" aria-label="Email us">[email]</a>
+            <a href="tel:[phone]" class="hero__contact-link" aria-label="Call or WhatsApp us">[phone/WhatsApp]</a>
+          </div>
+          <div class="hero__cta-group">
+            <div class="hero__status" aria-label="Status: Available for projects">
+              <span class="hero__status-dot" aria-hidden="true"></span>
+              <span class="hero__status-text">Available for projects</span>
+            </div>
+            <a href="#contact" class="btn btn--primary">Start a Project</a>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Service preview cards - horizontal row -->
+      <div class="hero__previews" aria-label="Service previews">
+        <article class="preview-card" style="--preview-img: url('/assets/images/preview-web-design.svg')">
+          <div class="preview-card__inner">
+            <h2 class="preview-card__title">Web Design</h2>
+            <p class="preview-card__desc">Crafting visual identities that convert</p>
+          </div>
+        </article>
+        <article class="preview-card" style="--preview-img: url('/assets/images/preview-fullstack.svg')">
+          <div class="preview-card__inner">
+            <h2 class="preview-card__title">Full-Stack Dev</h2>
+            <p class="preview-card__desc">End-to-end application engineering</p>
+          </div>
+        </article>
+        <article class="preview-card" style="--preview-img: url('/assets/images/preview-cyber.svg')">
+          <div class="preview-card__inner">
+            <h2 class="preview-card__title">Cybersecurity</h2>
+            <p class="preview-card__desc">Offensive & defensive security</p>
+          </div>
+        </article>
+        <article class="preview-card" style="--preview-img: url('/assets/images/preview-vps.svg')">
+          <div class="preview-card__inner">
+            <h2 class="preview-card__title">Infrastructure</h2>
+            <p class="preview-card__desc">VPS, servers & cloud architecture</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ============================================
+         SERVICES — 6 service cards with taglines
+         ============================================ -->
+    <section class="services" id="services" aria-labelledby="services-title">
+      <div class="container">
+        <header class="section-header">
+          <span class="section-header__label">What We Do</span>
+          <h2 id="services-title" class="section-header__title">Services</h2>
+        </header>
+        <p class="services__intro">Six disciplines. One standard: production-grade delivery.</p>
+        <div class="services__grid" role="list">
+          <!-- Service 1: Web Design -->
+          <article class="service-card" role="listitem">
+            <div class="service-card__icon" aria-hidden="true">
+              <img src="/assets/icons/web-design.svg" alt="" width="40" height="40">
+            </div>
+            <h3 class="service-card__title">Web Design</h3>
+            <p class="service-card__tagline">Pixel-perfect UI, conversion-focused UX, design systems that scale.</p>
+          </article>
+          <!-- Service 2: Full-Stack Web Development -->
+          <article class="service-card" role="listitem">
+            <div class="service-card__icon" aria-hidden="true">
+              <img src="/assets/icons/fullstack.svg" alt="" width="40" height="40">
+            </div>
+            <h3 class="service-card__title">Full-Stack Web Development</h3>
+            <p class="service-card__tagline">Modern stacks, clean architecture, deploy-ready from day one.</p>
+          </article>
+          <!-- Service 3: Website Migration -->
+          <article class="service-card" role="listitem">
+            <div class="service-card__icon" aria-hidden="true">
+              <img src="/assets/icons/migration.svg" alt="" width="40" height="40">
+            </div>
+            <h3 class="service-card__title">Website Migration</h3>
+            <p class="service-card__tagline">Zero-downtime moves across platforms, hosts, and tech stacks.</p>
+          </article>
+          <!-- Service 4: Cybersecurity Consultancy -->
+          <article class="service-card" role="listitem">
+            <div class="service-card__icon" aria-hidden="true">
+              <img src="/assets/icons/cybersecurity.svg" alt="" width="40" height="40">
+            </div>
+            <h3 class="service-card__title">Cybersecurity Consultancy</h3>
+            <p class="service-card__tagline">Risk assessments, compliance guidance, security architecture review.</p>
+          </article>
+          <!-- Service 5: Penetration Testing / Ethical Hacking -->
+          <article class="service-card" role="listitem">
+            <div class="service-card__icon" aria-hidden="true">
+              <img src="/assets/icons/pentesting.svg" alt="" width="40" height="40">
+            </div>
+            <h3 class="service-card__title">Penetration Testing / Ethical Hacking</h3>
+            <p class="service-card__tagline">Authorized attacks that expose real vulnerabilities before attackers do.</p>
+          </article>
+          <!-- Service 6: VPS Setup & Server Management -->
+          <article class="service-card" role="listitem">
+            <div class="service-card__icon" aria-hidden="true">
+              <img src="/assets/icons/vps.svg" alt="" width="40" height="40">
+            </div>
+            <h3 class="service-card__title">VPS Setup & Server Management</h3>
+            <p class="service-card__tagline">Hardened Linux, automation, monitoring, 24/7 reliability.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         PRICING — 3 tier cards
+         ============================================ -->
+    <section class="pricing" id="pricing" aria-labelledby="pricing-title">
+      <div class="container">
+        <header class="section-header">
+          <span class="section-header__label">Investment</span>
+          <h2 id="pricing-title" class="section-header__title">Pricing</h2>
+        </header>
+        <p class="pricing__intro">Transparent tiers. No hidden fees. Scope defines the investment.</p>
+        <div class="pricing__grid" role="list">
+          <!-- Starter -->
+          <article class="pricing-card" role="listitem">
+            <header class="pricing-card__header">
+              <h3 class="pricing-card__name">Starter</h3>
+              <p class="pricing-card__desc">For MVPs & landing pages</p>
+            </header>
+            <div class="pricing-card__price">
+              <span class="pricing-card__amount">₹75,000</span>
+              <span class="pricing-card__period">/ project</span>
+            </div>
+            <ul class="pricing-card__features" aria-label="Starter plan features">
+              <li>Up to 5 pages / screens</li>
+              <li>Responsive, mobile-first</li>
+              <li>CMS setup (Webflow/WordPress)</li>
+              <li>Basic SEO & analytics</li>
+              <li>30 days support</li>
+            </ul>
+            <a href="#contact" class="btn btn--outline pricing-card__cta">Start Starter</a>
+          </article>
+          <!-- Growth -->
+          <article class="pricing-card pricing-card--featured" role="listitem">
+            <header class="pricing-card__header">
+              <h3 class="pricing-card__name">Growth</h3>
+              <p class="pricing-card__desc">For scaling products</p>
+            </header>
+            <div class="pricing-card__price">
+              <span class="pricing-card__amount">₹2,50,000</span>
+              <span class="pricing-card__period">/ project</span>
+            </div>
+            <ul class="pricing-card__features" aria-label="Growth plan features">
+              <li>Up to 20 pages / modules</li>
+              <li>Custom design system</li>
+              <li>Full-stack (Next.js/React/Node)</li>
+              <li>Auth, DB, API integration</li>
+              <li>60 days support + retainer option</li>
+            </ul>
+            <a href="#contact" class="btn btn--primary pricing-card__cta">Start Growth</a>
+          </article>
+          <!-- Enterprise -->
+          <article class="pricing-card" role="listitem">
+            <header class="pricing-card__header">
+              <h3 class="pricing-card__name">Enterprise</h3>
+              <p class="pricing-card__desc">For complex platforms</p>
+            </header>
+            <div class="pricing-card__price">
+              <span class="pricing-card__amount">₹6,00,000+</span>
+              <span class="pricing-card__period">/ engagement</span>
+            </div>
+            <ul class="pricing-card__features" aria-label="Enterprise plan features">
+              <li>Unlimited scope & team</li>
+              <li>Security-first architecture</li>
+              <li>DevOps, CI/CD, infra as code</li>
+              <li>Penetration testing included</li>
+              <li>Ongoing SLA & 24/7 monitoring</li>
+            </ul>
+            <a href="#contact" class="btn btn--outline pricing-card__cta">Start Enterprise</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         STATS — 3 count-up numbers
+         ============================================ -->
+    <section class="stats" id="stats" aria-labelledby="stats-title">
+      <div class="container">
+        <header class="section-header">
+          <span class="section-header__label">By The Numbers</span>
+          <h2 id="stats-title" class="section-header__title">Stats</h2>
+        </header>
+        <div class="stats__grid" role="list">
+          <article class="stat-card" role="listitem">
+            <div class="stat-card__value" data-count="47">0</div>
+            <div class="stat-card__label">Projects Delivered</div>
+          </article>
+          <article class="stat-card" role="listitem">
+            <div class="stat-card__value" data-count="4">0</div>
+            <div class="stat-card__label">Years Experience</div>
+          </article>
+          <article class="stat-card" role="listitem">
+            <div class="stat-card__value" data-count="98">0</div>
+            <div class="stat-card__label">Client Satisfaction %</div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         WORK — Horizontal scroll project cards
+         ============================================ -->
+    <section class="work" id="work" aria-labelledby="work-title">
+      <div class="container">
+        <header class="section-header">
+          <span class="section-header__label">Selected Work</span>
+          <h2 id="work-title" class="section-header__title">Work</h2>
+        </header>
+        <div class="work__scroller" role="list" aria-label="Project showcase">
+          <!-- Project 1 -->
+          <article class="work-card" role="listitem">
+            <div class="work-card__media" style="background-image: url('/assets/images/work-1.svg')" aria-hidden="true"></div>
+            <div class="work-card__content">
+              <span class="work-card__tag">Web App</span>
+              <h3 class="work-card__title">FinTech Dashboard</h3>
+              <p class="work-card__desc">Real-time analytics platform for investment firms</p>
+            </div>
+          </article>
+          <!-- Project 2 -->
+          <article class="work-card" role="listitem">
+            <div class="work-card__media" style="background-image: url('/assets/images/work-2.svg')" aria-hidden="true"></div>
+            <div class="work-card__content">
+              <span class="work-card__tag">E-Commerce</span>
+              <h3 class="work-card__title">Multi-Vendor Marketplace</h3>
+              <p class="work-card__desc">Headless commerce with custom vendor onboarding</p>
+            </div>
+          </article>
+          <!-- Project 3 -->
+          <article class="work-card" role="listitem">
+            <div class="work-card__media" style="background-image: url('/assets/images/work-3.svg')" aria-hidden="true"></div>
+            <div class="work-card__content">
+              <span class="work-card__tag">Security Audit</span>
+              <h3 class="work-card__title">SaaS Penetration Test</h3>
+              <p class="work-card__desc">Full-scope red team engagement, zero critical findings</p>
+            </div>
+          </article>
+          <!-- Project 4 -->
+          <article class="work-card" role="listitem">
+            <div class="work-card__media" style="background-image: url('/assets/images/work-4.svg')" aria-hidden="true"></div>
+            <div class="work-card__content">
+              <span class="work-card__tag">Infrastructure</span>
+              <h3 class="work-card__title">Cloud Migration</h3>
+              <p class="work-card__desc">Legacy to Kubernetes, 99.99% uptime SLA</p>
+            </div>
+          </article>
+          <!-- Project 5 -->
+          <article class="work-card" role="listitem">
+            <div class="work-card__media" style="background-image: url('/assets/images/work-5.svg')" aria-hidden="true"></div>
+            <div class="work-card__content">
+              <span class="work-card__tag">Web Design</span>
+              <h3 class="work-card__title">Brand Identity System</h3>
+              <p class="work-card__desc">Design tokens, component library, documentation</p>
+            </div>
+          </article>
+          <!-- Project 6 -->
+          <article class="work-card" role="listitem">
+            <div class="work-card__media" style="background-image: url('/assets/images/work-6.svg')" aria-hidden="true"></div>
+            <div class="work-card__content">
+              <span class="work-card__tag">Custom Dev</span>
+              <h3 class="work-card__title">Internal Tools Suite</h3>
+              <p class="work-card__desc">Admin panels, reporting, workflow automation</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         TESTIMONIALS — Horizontal carousel
+         ============================================ -->
+    <section class="testimonials" id="testimonials" aria-labelledby="testimonials-title">
+      <div class="container">
+        <header class="section-header">
+          <span class="section-header__label">Client Voices</span>
+          <h2 id="testimonials-title" class="section-header__title">Testimonials</h2>
+        </header>
+        <div class="testimonials__scroller" role="list" aria-label="Client testimonials">
+          <!-- Testimonial 1 -->
+          <article class="testimonial-card" role="listitem">
+            <blockquote class="testimonial-card__quote">"They didn't just build our platform — they architected it for scale. The security review alone saved us months of rework."</blockquote>
+            <footer class="testimonial-card__author">
+              <cite class="testimonial-card__name">Rajesh Sharma</cite>
+              <span class="testimonial-card__separator" aria-hidden="true">•</span>
+              <span class="testimonial-card__role">CTO, FinFlow</span>
+            </footer>
+          </article>
+          <!-- Testimonial 2 -->
+          <article class="testimonial-card" role="listitem">
+            <blockquote class="testimonial-card__quote">"Best migration experience I've had in 15 years. Zero downtime, clean handoff, documentation that actually helps."</blockquote>
+            <footer class="testimonial-card__author">
+              <cite class="testimonial-card__name">Priya Nair</cite>
+              <span class="testimonial-card__separator" aria-hidden="true">•</span>
+              <span class="testimonial-card__role">VP Engineering, HealthTech India</span>
+            </footer>
+          </article>
+          <!-- Testimonial 3 -->
+          <article class="testimonial-card" role="listitem">
+            <blockquote class="testimonial-card__quote">"Their pentest report was the most actionable we've ever received. Every finding had a clear remediation path."</blockquote>
+            <footer class="testimonial-card__author">
+              <cite class="testimonial-card__name">Amit Patel</cite>
+              <span class="testimonial-card__separator" aria-hidden="true">•</span>
+              <span class="testimonial-card__role">Security Lead, Edunet</span>
+            </footer>
+          </article>
+          <!-- Testimonial 4 -->
+          <article class="testimonial-card" role="listitem">
+            <blockquote class="testimonial-card__quote">"We went from concept to production in 6 weeks. Their design system approach means we ship features, not pixels."</blockquote>
+            <footer class="testimonial-card__author">
+              <cite class="testimonial-card__name">Sneha Reddy</cite>
+              <span class="testimonial-card__separator" aria-hidden="true">•</span>
+              <span class="testimonial-card__role">Founder, LogiChain</span>
+            </footer>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         ABOUT — Two-column: text + founder photos
+         ============================================ -->
+    <section class="about" id="about" aria-labelledby="about-title">
+      <div class="container">
+        <header class="section-header">
+          <span class="section-header__label">Who We Are</span>
+          <h2 id="about-title" class="section-header__title">About</h2>
+        </header>
+        <div class="about__grid">
+          <div class="about__content">
+            <p class="about__blurb">CyberMercenaries is a two-person studio operating from Agartala, Tripura — delivering global-grade web engineering and cybersecurity without the agency bloat.</p>
+            <p class="about__blurb">We believe the best work happens when design, development, and security are unified from day one. No handoffs. No finger-pointing. One team, full ownership.</p>
+            
+            <div class="about__founders">
+              <article class="founder-card">
+                <header class="founder-card__header">
+                  <h3 class="founder-card__name">Mohit Kumar Yadav</h3>
+                  <span class="founder-card__role">Web Design & Development</span>
+                </header>
+                <p class="founder-card__bio">Full-stack engineer turned product designer. Obsessed with type systems, performance budgets, and developer experience. Ships clean, maintainable code that designers love and browsers render fast.</p>
+              </article>
+              <article class="founder-card">
+                <header class="founder-card__header">
+                  <h3 class="founder-card__name">Pratyay Mukharjee</h3>
+                  <span class="founder-card__role">Cybersecurity & Infrastructure</span>
+                </header>
+                <p class="founder-card__bio">Offensive security specialist and infrastructure architect. Red teams by night, hardens clouds by day. Believes security is a design constraint, not an afterthought. Builds systems that survive contact with reality.</p>
+              </article>
+            </div>
+          </div>
+          <div class="about__images" aria-label="Founder portraits">
+            <figure class="about__portrait">
+              <!-- Image placeholder: /assets/images/founder-mohit.jpg -->
+              <img src="/assets/images/founder-mohit.svg" alt="Mohit Kumar Yadav" width="400" height="500" loading="lazy">
+              <figcaption class="visually-hidden">Mohit Kumar Yadav</figcaption>
+            </figure>
+            <figure class="about__portrait">
+              <!-- Image placeholder: /assets/images/founder-pratyay.jpg -->
+              <img src="/assets/images/founder-pratyay.svg" alt="Pratyay Mukharjee" width="400" height="500" loading="lazy">
+              <figcaption class="visually-hidden">Pratyay Mukharjee</figcaption>
+            </figure>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         CONTACT — Form + business info + footer
+         ============================================ -->
+    <section class="contact" id="contact" aria-labelledby="contact-title">
+      <div class="container">
+        <header class="section-header">
+          <span class="section-header__label">Get In Touch</span>
+          <h2 id="contact-title" class="section-header__title">Contact</h2>
+        </header>
+        <div class="contact__grid">
+          <!-- Form -->
+          <form class="contact-form" action="https://formspree.io/f/[FORMSPREE_ID]" method="POST" novalidate>
+            <div class="form-group">
+              <label for="name" class="form-label">Name <span class="required" aria-hidden="true">*</span></label>
+              <input type="text" id="name" name="name" class="form-input" required aria-required="true" autocomplete="name">
+              <span class="form-error" aria-live="polite"></span>
+            </div>
+            <div class="form-group">
+              <label for="email" class="form-label">Email <span class="required" aria-hidden="true">*</span></label>
+              <input type="email" id="email" name="email" class="form-input" required aria-required="true" autocomplete="email">
+              <span class="form-error" aria-live="polite"></span>
+            </div>
+            <div class="form-group">
+              <label for="phone" class="form-label">Phone / WhatsApp</label>
+              <input type="tel" id="phone" name="phone" class="form-input" autocomplete="tel">
+              <span class="form-error" aria-live="polite"></span>
+            </div>
+            <div class="form-group">
+              <label for="message" class="form-label">Message <span class="required" aria-hidden="true">*</span></label>
+              <textarea id="message" name="message" class="form-textarea" rows="5" required aria-required="true"></textarea>
+              <span class="form-error" aria-live="polite"></span>
+            </div>
+            <button type="submit" class="btn btn--primary contact-form__submit">Send Message</button>
+            <p class="form-status" aria-live="polite" hidden></p>
+          </form>
+          
+          <!-- Business info -->
+          <div class="contact-info">
+            <h3 class="contact-info__title">Let's Talk</h3>
+            <p class="contact-info__desc">We respond within 24 hours. No bots, no sales scripts — just us.</p>
+            <address class="contact-info__details">
+              <div class="contact-info__item">
+                <span class="contact-info__label">Location</span>
+                <span class="contact-info__value">Agartala, Tripura, India</span>
+              </div>
+              <div class="contact-info__item">
+                <span class="contact-info__label">Email</span>
+                <a href="mailto:[email]" class="contact-info__link">[email]</a>
+              </div>
+              <div class="contact-info__item">
+                <span class="contact-info__label">WhatsApp</span>
+                <a href="https://wa.me/[phone]" class="contact-info__link" target="_blank" rel="noopener">[phone/WhatsApp]</a>
+              </div>
+            </address>
+          </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="footer" role="contentinfo">
+          <p class="footer__copyright">CyberMercenaries © 2026</p>
+          <nav class="footer__legal" aria-label="Legal links">
+            <a href="/privacy" class="footer__link">Privacy</a>
+            <span class="footer__separator" aria-hidden="true">/</span>
+            <a href="/terms" class="footer__link">Terms</a>
+          </nav>
+        </footer>
+      </div>
+    </section>
+  </main>
+
+  <!-- GSAP + ScrollTrigger via CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="/js/main.js"></script>
+</body>
+</html>
