@@ -546,7 +546,7 @@ function PricingConfigurator() {
                 className: "flex flex-wrap gap-2",
                 children: __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$content$2f$pricing$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["pricing"].map((s)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                         onClick: ()=>handleServiceChange(s.key),
-                        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("border px-4 py-2 text-sm font-medium transition-colors duration-150", s.key === activeService ? "border-signal bg-signal text-signal-ink" : "border-line bg-surface text-ink-dim hover:border-line-strong hover:text-ink"),
+                        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("border px-4 py-2 min-h-[44px] text-sm font-medium transition-colors duration-150", s.key === activeService ? "border-signal bg-signal text-signal-ink" : "border-line bg-surface text-ink-dim hover:border-line-strong hover:text-ink"),
                         children: s.name
                     }, s.key, false, {
                         fileName: "[project]/src/components/pricing-configurator.tsx",
@@ -643,7 +643,7 @@ function PricingConfigurator() {
                                         const isSelected = selectedIds.includes(feature.id);
                                         return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                             onClick: ()=>toggleFeature(feature.id),
-                                            className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("w-full border p-4 text-left transition-colors duration-150", isSelected ? "border-signal bg-signal/10" : "border-line bg-surface-2 hover:border-line-strong"),
+                                            className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("w-full border p-4 min-h-[44px] text-left transition-colors duration-150", isSelected ? "border-signal bg-signal/10" : "border-line bg-surface-2 hover:border-line-strong"),
                                             children: [
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                     className: "flex items-center justify-between",

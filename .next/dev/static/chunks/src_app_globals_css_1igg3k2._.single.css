@@ -85,6 +85,7 @@
     --font-weight-medium: 500;
     --font-weight-semibold: 600;
     --tracking-tight: -.025em;
+    --tracking-wider: .05em;
     --leading-tight: 1.25;
     --leading-relaxed: 1.625;
     --radius-lg: .5rem;
@@ -523,6 +524,10 @@
     margin-bottom: var(--spacing);
   }
 
+  .mb-1\.5 {
+    margin-bottom: calc(var(--spacing) * 1.5);
+  }
+
   .mb-3 {
     margin-bottom: calc(var(--spacing) * 3);
   }
@@ -606,6 +611,10 @@
     height: 100%;
   }
 
+  .min-h-\[44px\] {
+    min-height: 44px;
+  }
+
   .min-h-\[calc\(100vh-var\(--nav-height\)\)\] {
     min-height: calc(100vh - var(--nav-height));
   }
@@ -666,6 +675,10 @@
     resize: both;
   }
 
+  .resize-y {
+    resize: vertical;
+  }
+
   .scroll-mt-\[var\(--nav-height\)\] {
     scroll-margin-top: var(--nav-height);
   }
@@ -722,6 +735,10 @@
     gap: calc(var(--spacing) * 10);
   }
 
+  .gap-12 {
+    gap: calc(var(--spacing) * 12);
+  }
+
   :where(.space-y-2 > :not(:last-child)) {
     --tw-space-y-reverse: 0;
     margin-block-start: calc(calc(var(--spacing) * 2) * var(--tw-space-y-reverse));
@@ -738,6 +755,12 @@
     --tw-space-y-reverse: 0;
     margin-block-start: calc(calc(var(--spacing) * 4) * var(--tw-space-y-reverse));
     margin-block-end: calc(calc(var(--spacing) * 4) * calc(1 - var(--tw-space-y-reverse)));
+  }
+
+  :where(.space-y-5 > :not(:last-child)) {
+    --tw-space-y-reverse: 0;
+    margin-block-start: calc(calc(var(--spacing) * 5) * var(--tw-space-y-reverse));
+    margin-block-end: calc(calc(var(--spacing) * 5) * calc(1 - var(--tw-space-y-reverse)));
   }
 
   :where(.space-y-6 > :not(:last-child)) {
@@ -796,6 +819,20 @@
     border-left-width: 2px;
   }
 
+  .border-danger {
+    border-color: var(--color-danger);
+  }
+
+  .border-danger\/30 {
+    border-color: var(--color-danger);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .border-danger\/30 {
+      border-color: color-mix(in oklab, var(--color-danger) 30%, transparent);
+    }
+  }
+
   .border-line {
     border-color: var(--color-line);
   }
@@ -804,12 +841,42 @@
     border-color: var(--color-line-strong);
   }
 
+  .border-ok\/30 {
+    border-color: var(--color-ok);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .border-ok\/30 {
+      border-color: color-mix(in oklab, var(--color-ok) 30%, transparent);
+    }
+  }
+
   .border-signal {
     border-color: var(--color-signal);
   }
 
+  .bg-danger\/10 {
+    background-color: var(--color-danger);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .bg-danger\/10 {
+      background-color: color-mix(in oklab, var(--color-danger) 10%, transparent);
+    }
+  }
+
   .bg-ok {
     background-color: var(--color-ok);
+  }
+
+  .bg-ok\/10 {
+    background-color: var(--color-ok);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .bg-ok\/10 {
+      background-color: color-mix(in oklab, var(--color-ok) 10%, transparent);
+    }
   }
 
   .bg-signal {
@@ -987,8 +1054,17 @@
     letter-spacing: var(--tracking-tight);
   }
 
+  .tracking-wider {
+    --tw-tracking: var(--tracking-wider);
+    letter-spacing: var(--tracking-wider);
+  }
+
   .text-wrap {
     text-wrap: wrap;
+  }
+
+  .text-danger {
+    color: var(--color-danger);
   }
 
   .text-ink {
@@ -1003,6 +1079,10 @@
     color: var(--color-ink-faint);
   }
 
+  .text-ok {
+    color: var(--color-ok);
+  }
+
   .text-signal {
     color: var(--color-signal);
   }
@@ -1013,6 +1093,10 @@
 
   .lowercase {
     text-transform: lowercase;
+  }
+
+  .uppercase {
+    text-transform: uppercase;
   }
 
   .tabular-nums {
@@ -1098,6 +1182,10 @@
     outline-style: none;
   }
 
+  .placeholder\:text-ink-faint::placeholder {
+    color: var(--color-ink-faint);
+  }
+
   @media (hover: hover) {
     .hover\:border-ink-faint:hover {
       border-color: var(--color-ink-faint);
@@ -1114,6 +1202,18 @@
     .hover\:text-ink:hover {
       color: var(--color-ink);
     }
+  }
+
+  .focus\:border-signal:focus {
+    border-color: var(--color-signal);
+  }
+
+  .disabled\:cursor-not-allowed:disabled {
+    cursor: not-allowed;
+  }
+
+  .disabled\:opacity-60:disabled {
+    opacity: .6;
   }
 
   @media (min-width: 40rem) {
@@ -1182,6 +1282,14 @@
   @media (min-width: 64rem) {
     .lg\:grid-cols-3 {
       grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .lg\:grid-cols-\[1fr_360px\] {
+      grid-template-columns: 1fr 360px;
+    }
+
+    .lg\:pt-1 {
+      padding-top: var(--spacing);
     }
 
     .lg\:text-6xl {
