@@ -2,6 +2,7 @@ import { Nav } from "@/components/nav";
 import { Hero } from "@/components/hero";
 import { Footer } from "@/components/footer";
 import { Section } from "@/components/section";
+import { Services } from "@/components/services";
 
 /**
  * PLACEHOLDER HOMEPAGE — this is the Phase 0 skeleton.
@@ -15,7 +16,9 @@ export default function Home() {
     <>
       <Nav />
       <Hero />
-      <Section id="services" title="Services" />
+      <Section id="services" title="Services">
+        <Services />
+      </Section>
       <Section id="pricing" title="Pricing" />
       <Section id="work" title="Work" />
       <Section id="about" title="About" />
