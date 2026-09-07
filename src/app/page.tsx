@@ -4,6 +4,8 @@ import { Footer } from "@/components/footer";
 import { Section } from "@/components/section";
 import { Services } from "@/components/services";
 import { PricingConfigurator } from "@/components/pricing-configurator";
+import { Stats } from "@/components/stats";
+import { Work } from "@/components/work";
 
 /**
  * PLACEHOLDER HOMEPAGE — this is the Phase 0 skeleton.
@@ -23,8 +25,12 @@ export default function Home() {
       <Section id="pricing" title="Pricing">
         <PricingConfigurator />
       </Section>
-      <Section id="work" title="Work" />
-      <Section id="about" title="About" />
+      <Section id="work" title="Work">
+        <Work />
+      </Section>
+      <Section id="about" title="About">
+        <Stats />
+      </Section>
       <Section id="contact" title="Contact" />
       <Footer />
     </>
