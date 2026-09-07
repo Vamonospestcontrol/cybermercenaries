@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, useInView, useReducedMotion } from "motion/react";
+import { useInView, useReducedMotion } from "motion/react";
 import { stats } from "@/content/site";
 
 function useCountUp(end: number, duration: number, animate: boolean) {
@@ -72,11 +72,8 @@ export function Stats() {
   const prefersReducedMotion = useReducedMotion();
 
   return (
-    <motion.div
+    <div
       ref={ref}
-      initial={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
-      animate={inView || prefersReducedMotion ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.5 }}
       className="grid grid-cols-1 gap-10 sm:grid-cols-3"
     >
       {stats.map((stat) => (
@@ -87,6 +84,6 @@ export function Stats() {
           animate={inView && !prefersReducedMotion}
         />
       ))}
-    </motion.div>
+    </div>
   );
 }

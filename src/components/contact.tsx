@@ -59,7 +59,7 @@ function validate(values: FormValues): FormErrors {
 
 const INPUT_CLASS = cn(
   "w-full border bg-surface-2 px-4 py-3 text-sm text-ink placeholder:text-ink-faint",
-  "border-line outline-none transition-colors duration-200",
+  "border-line transition-colors duration-200",
   "focus:border-signal"
 );
 

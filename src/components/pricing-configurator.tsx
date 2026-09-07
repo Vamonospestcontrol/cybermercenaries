@@ -58,7 +58,7 @@ export function PricingConfigurator() {
             key={s.key}
             onClick={() => handleServiceChange(s.key)}
             className={cn(
-              "border px-4 py-2 text-sm font-medium transition-colors duration-150",
+              "border px-4 py-2 min-h-[44px] text-sm font-medium transition-colors duration-150",
               s.key === activeService
                 ? "border-signal bg-signal text-signal-ink"
                 : "border-line bg-surface text-ink-dim hover:border-line-strong hover:text-ink",
@@ -114,7 +114,7 @@ export function PricingConfigurator() {
                     key={feature.id}
                     onClick={() => toggleFeature(feature.id)}
                     className={cn(
-                      "w-full border p-4 text-left transition-colors duration-150",
+                      "w-full border p-4 min-h-[44px] text-left transition-colors duration-150",
                       isSelected
                         ? "border-signal bg-signal/10"
                         : "border-line bg-surface-2 hover:border-line-strong",

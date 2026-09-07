@@ -1,22 +1,12 @@
-"use client";
-
-import { useRef } from "react";
-import { motion, useInView } from "motion/react";
 import { work } from "@/content/site";
 import { cn } from "@/lib/utils";
 
 export function Work() {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-80px" });
-
   return (
-    <div ref={ref} className="grid grid-cols-1 gap-6 md:grid-cols-2">
-      {work.map((project, i) => (
-        <motion.article
+    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+      {work.map((project) => (
+        <article
           key={project.slug}
-          initial={{ opacity: 0, y: 16 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5, delay: i * 0.1 }}
           className={cn(
             "flex flex-col border border-line bg-surface overflow-hidden",
             "transition-colors duration-200 hover:border-line-strong"
@@ -43,7 +33,7 @@ export function Work() {
               {project.description}
             </p>
           </div>
-        </motion.article>
+        </article>
       ))}
     </div>
   );
