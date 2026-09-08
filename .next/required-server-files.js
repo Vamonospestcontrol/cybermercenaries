@@ -105,7 +105,7 @@ self.__SERVER_FILES_MANIFEST={
         "transform": "lodash/{{member}}"
       }
     },
-    "outputFileTracingRoot": "/home/pratyay/Documents/cybermercenaries",
+    "outputFileTracingRoot": "/home/mohit/Projects/cybermercenaries",
     "enablePrerenderSourceMaps": true,
     "cacheComponents": false,
     "cacheLife": {
@@ -175,7 +175,7 @@ self.__SERVER_FILES_MANIFEST={
       "proxyPrefetch": "flexible",
       "optimisticClientCache": true,
       "manualClientBasePath": false,
-      "cpus": 3,
+      "cpus": 7,
       "memoryBasedWorkersCount": false,
       "imgOptConcurrency": null,
       "imgOptOperationCache": null,
@@ -320,13 +320,13 @@ self.__SERVER_FILES_MANIFEST={
     "htmlLimitedBots": "[\\w-]+-Google|Google-[\\w-]+|Chrome-Lighthouse|Slurp|DuckDuckBot|baiduspider|yandex|sogou|bitlybot|tumblr|vkShare|quora link preview|redditbot|ia_archiver|Bingbot|BingPreview|applebot|facebookexternalhit|facebookcatalog|Twitterbot|LinkedInBot|Slackbot|Discordbot|WhatsApp|SkypeUriPreview|Yeti|googleweblight",
     "bundlePagesRouterDependencies": false,
     "configFileName": "next.config.ts",
-    "repoRoot": "/home/pratyay/Documents/cybermercenaries",
+    "repoRoot": "/home/mohit/Projects/cybermercenaries",
     "turbopack": {
-      "root": "/home/pratyay/Documents/cybermercenaries"
+      "root": "/home/mohit/Projects/cybermercenaries"
     },
     "distDirRoot": ".next"
   },
-  "appDir": "/home/pratyay/Documents/cybermercenaries",
+  "appDir": "/home/mohit/Projects/cybermercenaries",
   "relativeAppDir": "",
   "files": [
     ".next/package.json",

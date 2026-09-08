@@ -49,6 +49,12 @@ export const pricing: ServicePricing[] = [
         description: "Original icons or illustrations instead of a stock/library set.",
         priceDelta: 3000,
       },
+      {
+        id: "security-review",
+        label: "Security review before launch",
+        description: "Pratyay reviews the build for common vulnerabilities before it goes live, with a short written report.",
+        priceDelta: 9000,
+      },
     ],
   },
   {
@@ -98,6 +104,12 @@ export const pricing: ServicePricing[] = [
         label: "Interactive animations",
         description: "Motion-driven UI beyond basic fades — scroll-linked, gesture-based.",
         priceDelta: 4000,
+      },
+      {
+        id: "security-review",
+        label: "Security review before launch",
+        description: "Pratyay reviews the build for common vulnerabilities before it goes live, with a short written report.",
+        priceDelta: 9000,
       },
     ],
   },
