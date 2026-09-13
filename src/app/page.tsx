@@ -1,3 +1,4 @@
+// src/app/page.tsx
 import { Nav } from "@/components/nav";
 import { Hero } from "@/components/hero";
 import { Footer } from "@/components/footer";
@@ -8,6 +9,8 @@ import { Work } from "@/components/work";
 import { About } from "@/components/about";
 import { Testimonials } from "@/components/testimonials";
 import { testimonials } from "@/content/site";
+import { Contact } from "@/components/contact";
+import { Stats } from "@/components/stats";
 
 /**
  * PLACEHOLDER HOMEPAGE — this is the Phase 0 skeleton.
@@ -27,6 +30,9 @@ export default function Home() {
       <Section id="pricing" title="Pricing">
         <PricingConfigurator />
       </Section>
+
+      <Stats />
+
       <Section id="work" title="Work">
         <Work />
       </Section>
@@ -38,7 +44,9 @@ export default function Home() {
       <Section id="about" title="About">
         <About />
       </Section>
-      <Section id="contact" title="Contact" />
+      <Section id="contact" title="Contact">
+        <Contact />
+      </Section>
       <Footer />
     </>
   );
