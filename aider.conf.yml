@@ -1,0 +1,5 @@
+model: openai/deepseek-v4-flash
+weak-model: openai/deepseek-v4-flash
+editor-model: openai/deepseek-v4-flash
+auto-commits: true
+read: CONVENTIONS.md
