@@ -577,3 +577,14 @@ export const RATE_NOTES = {
   support: "30 days of post-launch support is standard.",
   estimateDisclaimer: "Estimate only — the final quote follows a scope discussion.",
 };
+
+/**
+ * Maps a service key from `pricing` to the rate-card role that prices it.
+ * Deliberately partial: a service with no entry keeps its existing pricing
+ * path untouched (migration-vps, cybersecurity-consultancy and
+ * penetration-testing are scoped per engagement, not by role).
+ */
+export const RATE_SERVICE_MAP: { [K in ServicePricing["key"]]?: RateRoleId } = {
+  "web-design": "designer",
+  "full-stack-dev": "fullstack",
+};
