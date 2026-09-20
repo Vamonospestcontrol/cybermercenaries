@@ -1,17 +1,28 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { Check } from "lucide-react";
-import { pricing } from "@/content/pricing";
-import { type ServiceKey, computeEstimate, formatINR } from "@/lib/pricing";
+import { pricing, RATE_SERVICE_MAP, RATE_TIERS } from "@/content/pricing";
+import type { RateRange, RateTierId } from "@/content/pricing";
+import {
+  type ServiceKey,
+  computeEstimate,
+  estimateRange,
+  formatINR,
+  formatRange,
+  getRole,
+} from "@/lib/pricing";
 import { cn } from "@/lib/utils";
 
 export function PricingConfigurator() {
+  const prefersReducedMotion = useReducedMotion();
   const [activeService, setActiveService] = useState<ServiceKey>(
     pricing[0].key,
   );
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [scopeId, setScopeId] = useState<string>("");
+  const [tier, setTier] = useState<RateTierId>("standard");
 
   const service = useMemo(
     () => pricing.find((s) => s.key === activeService)!,
@@ -23,6 +34,47 @@ export function PricingConfigurator() {
     [service, selectedIds],
   );
 
+  // Rate-card path — only for services present in RATE_SERVICE_MAP.
+  const rateRoleId = RATE_SERVICE_MAP[activeService];
+  const rateRole = useMemo(
+    () => (rateRoleId ? getRole(rateRoleId) : undefined),
+    [rateRoleId],
+  );
+  const isMapped = !!rateRole && rateRole.rows.length > 0;
+
+  // Falls back to the role's first row (default) when scopeId is empty/stale.
+  const activeScopeId = useMemo(() => {
+    if (!isMapped) return "";
+    const hasScope = rateRole!.rows.some((row) => row.id === scopeId);
+    return hasScope ? scopeId : rateRole!.rows[0].id;
+  }, [isMapped, rateRole, scopeId]);
+
+  const rateRange = useMemo<RateRange | null>(() => {
+    if (!isMapped || !rateRoleId || !activeScopeId) return null;
+    return estimateRange({ roleId: rateRoleId, rowId: activeScopeId, tier });
+  }, [isMapped, rateRoleId, activeScopeId, tier]);
+
+  // Fold one-time add-ons onto both ends of the rate range — same way the
+  // generic path folds them into the base before spreading a range.
+  const mappedRange = useMemo<RateRange | null>(() => {
+    if (!rateRange) return null;
+    const oneTimeAddOns = service.features
+      .filter((f) => selectedIds.includes(f.id) && !f.recurring)
+      .reduce((sum, f) => sum + f.priceDelta, 0);
+    return {
+      min: rateRange.min + oneTimeAddOns,
+      max: rateRange.max + oneTimeAddOns,
+      openEnded: rateRange.openEnded,
+    };
+  }, [rateRange, service, selectedIds]);
+
+  const useRatePath = isMapped && mappedRange !== null;
+
+  const rangeText =
+    isMapped && mappedRange
+      ? formatRange(mappedRange)
+      : `${formatINR(estimate.rangeLow)} – ${formatINR(estimate.rangeHigh)}`;
+
   const handleServiceChange = (key: ServiceKey) => {
     setActiveService(key);
     setSelectedIds((prev) => {
@@ -30,6 +82,8 @@ export function PricingConfigurator() {
       const validIds = new Set(newService.features.map((f) => f.id));
       return prev.filter((id) => validIds.has(id));
     });
+    setScopeId("");
+    setTier("standard");
   };
 
   const toggleFeature = (id: string) => {
@@ -43,15 +97,41 @@ export function PricingConfigurator() {
       .map((id) => service.features.find((f) => f.id === id)?.label)
       .filter(Boolean)
       .join(", ");
+
+    if (isMapped && mappedRange && rateRole) {
+      const scopeLabel =
+        rateRole.rows.find((row) => row.id === activeScopeId)?.label ?? "";
+      const tierLabel = RATE_TIERS.find((t) => t.id === tier)?.label ?? "";
+      return [
+        `Hi, I'm interested in ${service.name}.`,
+        `Scope: ${scopeLabel}, ${tierLabel} tier.`,
+        `Estimated range: ${rangeText}${estimate.recurringTotal > 0 ? ` + ${formatINR(estimate.recurringTotal)}/month` : ""}.`,
+        addOns ? `Add-ons: ${addOns}.` : "",
+        "I'd like to schedule a scoping call.",
+      ]
+        .filter(Boolean)
+        .join(" ");
+    }
+
     return [
       `Hi, I'm interested in ${service.name}.`,
-      `Estimated range: ${formatINR(estimate.rangeLow)} – ${formatINR(estimate.rangeHigh)}${estimate.recurringTotal > 0 ? ` + ${formatINR(estimate.recurringTotal)}/month` : ""}.`,
+      `Estimated range: ${rangeText}${estimate.recurringTotal > 0 ? ` + ${formatINR(estimate.recurringTotal)}/month` : ""}.`,
       addOns ? `Add-ons: ${addOns}.` : "",
       "I'd like to schedule a scoping call.",
     ]
       .filter(Boolean)
       .join(" ");
-  }, [service, estimate, selectedIds]);
+  }, [
+    service,
+    estimate,
+    selectedIds,
+    isMapped,
+    mappedRange,
+    rateRole,
+    activeScopeId,
+    tier,
+    rangeText,
+  ]);
 
   return (
     <div className="space-y-8">
@@ -87,6 +167,69 @@ export function PricingConfigurator() {
           <div className="space-y-6">
             {/* Summary */}
             <p className="text-ink-dim">{service.summary}</p>
+
+            {isMapped && rateRole && (
+              <>
+                <fieldset>
+                  <legend className="mb-3 text-sm font-medium text-ink">
+                    {rateRole.scaleHeading}
+                  </legend>
+                  <div className="flex flex-wrap gap-2">
+                    {rateRole.rows.map((row) => {
+                      const isActive = row.id === activeScopeId;
+                      return (
+                        <button
+                          key={row.id}
+                          type="button"
+                          onClick={() => setScopeId(row.id)}
+                          aria-pressed={isActive}
+                          className={cn(
+                            "border px-4 py-2 min-h-[44px] text-sm font-medium transition-colors duration-150",
+                            isActive
+                              ? "border-signal bg-signal text-signal-ink"
+                              : "border-line bg-surface text-ink-dim hover:border-line-strong hover:text-ink",
+                          )}
+                        >
+                          {row.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </fieldset>
+
+                <fieldset>
+                  <legend className="mb-3 text-sm font-medium text-ink">
+                    Build tier
+                  </legend>
+                  <div className="space-y-3">
+                    {RATE_TIERS.map((t) => {
+                      const isActive = t.id === tier;
+                      return (
+                        <button
+                          key={t.id}
+                          type="button"
+                          onClick={() => setTier(t.id)}
+                          aria-pressed={isActive}
+                          className={cn(
+                            "w-full border p-4 min-h-[44px] text-left transition-colors duration-150",
+                            isActive
+                              ? "border-signal bg-signal/10"
+                              : "border-line bg-surface-2 hover:border-line-strong",
+                          )}
+                        >
+                          <span className="font-medium text-ink block break-words">
+                            {t.label}
+                          </span>
+                          <p className="mt-1 text-sm text-ink-dim break-words">
+                            {t.blurb}
+                          </p>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </fieldset>
+              </>
+            )}
 
             {/* Base includes */}
             <div>
@@ -165,34 +308,54 @@ export function PricingConfigurator() {
 
           {/* Estimate display - sticky bottom on mobile */}
           <div className="border-t border-line pt-6 mt-6 sm:mt-0 sticky bottom-0 sm:static bg-surface/95 backdrop-blur-sm sm:bg-transparent sm:backdrop-blur-none z-10 -mx-6 sm:mx-0 px-6 sm:px-0">
-            <div className="text-lg font-medium text-ink">
-              <AnimatePresence mode="wait">
-                <motion.span
-                  key={`${estimate.rangeLow}-${estimate.rangeHigh}`}
-                  initial={{ opacity: 0, y: 5 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -5 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  {formatINR(estimate.rangeLow)} –{" "}
-                  {formatINR(estimate.rangeHigh)}
-                </motion.span>
-              </AnimatePresence>
+            <div aria-live="polite">
+              <div className="text-lg font-medium text-ink">
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={rangeText}
+                    initial={
+                      prefersReducedMotion ? false : { opacity: 0, y: 5 }
+                    }
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={
+                      prefersReducedMotion
+                        ? { opacity: 1 }
+                        : { opacity: 0, y: -5 }
+                    }
+                    transition={
+                      prefersReducedMotion ? { duration: 0 } : { duration: 0.2 }
+                    }
+                    className="inline-block"
+                  >
+                    {rangeText}
+                  </motion.span>
+                </AnimatePresence>
+              </div>
+              {estimate.recurringTotal > 0 && (
+                <AnimatePresence mode="wait">
+                  <motion.p
+                    key={`recurring-${estimate.recurringTotal}`}
+                    initial={
+                      prefersReducedMotion ? false : { opacity: 0, y: 5 }
+                    }
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={
+                      prefersReducedMotion
+                        ? { opacity: 1 }
+                        : { opacity: 0, y: -5 }
+                    }
+                    transition={
+                      prefersReducedMotion
+                        ? { duration: 0 }
+                        : { duration: 0.2, delay: 0.1 }
+                    }
+                    className="mt-1 text-sm text-ink-dim"
+                  >
+                    + {formatINR(estimate.recurringTotal)}/month
+                  </motion.p>
+                </AnimatePresence>
+              )}
             </div>
-            {estimate.recurringTotal > 0 && (
-              <AnimatePresence mode="wait">
-                <motion.p
-                  key={`recurring-${estimate.recurringTotal}`}
-                  initial={{ opacity: 0, y: 5 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -5 }}
-                  transition={{ duration: 0.2, delay: 0.1 }}
-                  className="mt-1 text-sm text-ink-dim"
-                >
-                  + {formatINR(estimate.recurringTotal)}/month
-                </motion.p>
-              </AnimatePresence>
-            )}
             <p className="mt-3 text-xs text-ink-faint">
               Starting estimate — final quote after a short scoping call.
             </p>
