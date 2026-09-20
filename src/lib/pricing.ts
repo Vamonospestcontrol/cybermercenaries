@@ -4,6 +4,16 @@
  * and the math, so editing a price never means touching component code.
  */
 
+import { RATE_PREMIUMS, RATE_ROLES } from "@/content/pricing";
+import type {
+  RatePremium,
+  RateRange,
+  RateRole,
+  RateRoleId,
+  RateScaleRow,
+  RateTierId,
+} from "@/content/pricing";
+
 export type ServiceKey =
   | "web-design"
   | "full-stack-dev"
@@ -85,4 +95,81 @@ export function formatINR(amount: number): string {
     currency: "INR",
     maximumFractionDigits: 0,
   }).format(amount);
+}
+
+// ---------------------------------------------------------------------------
+// 2026 rate card. Types and figures live in src/content/pricing.ts; everything
+// below is pure formatting and estimate math, so components never do price
+// arithmetic themselves.
+// ---------------------------------------------------------------------------
+
+const usdFormatter = new Intl.NumberFormat("en-US", {
+  maximumFractionDigits: 0,
+});
+
+export function formatUSD(amount: number): string {
+  return `$${usdFormatter.format(amount)}`;
+}
+
+export function formatRange(
+  range: RateRange,
+  fmt: (amount: number) => string = formatINR,
+): string {
+  return `${fmt(range.min)} – ${fmt(range.max)}${range.openEnded ? "+" : ""}`;
+}
+
+export function applyPremium(
+  range: RateRange,
+  minPct: number,
+  maxPct: number,
+): RateRange {
+  return {
+    ...range,
+    min: Math.round((range.min * (100 + minPct)) / 100 / 100) * 100,
+    max: Math.round((range.max * (100 + maxPct)) / 100 / 100) * 100,
+  };
+}
+
+export function getRole(roleId: RateRoleId): RateRole | undefined {
+  return RATE_ROLES.find((role) => role.id === roleId);
+}
+
+export function getScaleRow(
+  roleId: RateRoleId,
+  rowId: string,
+): RateScaleRow | undefined {
+  return getRole(roleId)?.rows.find((row) => row.id === rowId);
+}
+
+export function premiumsFor(roleId: RateRoleId): RatePremium[] {
+  return RATE_PREMIUMS.filter((premium) =>
+    premium.appliesTo.includes(roleId),
+  );
+}
+
+export interface EstimateInput {
+  roleId: RateRoleId;
+  rowId: string;
+  tier: RateTierId;
+  /** Premiums to fold in; ones that don't apply to `roleId` are ignored. */
+  premiums?: readonly RatePremium["id"][];
+}
+
+export function estimateRange(input: EstimateInput): RateRange | null {
+  const row = getScaleRow(input.roleId, input.rowId);
+  if (!row) return null;
+
+  const range = row.tiers[input.tier];
+  const selectedIds = input.premiums ?? [];
+
+  const applied = premiumsFor(input.roleId).filter((premium) =>
+    selectedIds.includes(premium.id),
+  );
+
+  if (applied.length === 0) return range;
+
+  const minPct = applied.reduce((sum, premium) => sum + premium.minPct, 0);
+  const maxPct = applied.reduce((sum, premium) => sum + premium.maxPct, 0);
+
+  return applyPremium(range, minPct, maxPct);
 }
