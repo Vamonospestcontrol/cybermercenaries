@@ -51,6 +51,6 @@ value in a component, never introduce a new color:
 ## Pricing data rules
 - Prices live only in `src/content/pricing.ts` as whole-number integers (INR rupees; USD dollars for hourly rates). Never store or hardcode formatted strings like "₹1,50,000".
 - A source figure with a trailing "+" is `openEnded: true` on its range and renders with a "+".
-- All price formatting and premium/estimate math lives in `src/lib/pricing.ts` (`formatINR`, `formatRange`, `applyPremium`, `estimateRange`). Components call these and never do price arithmetic themselves. INR uses en-IN grouping (₹1,50,000).
+- Price formatting and estimate math lives in `src/lib/pricing.ts`. `formatINR` and `computeEstimate` exist today; `formatUSD`, `formatRange`, `applyPremium`, `estimateRange` are added by the 2026 rate-card work. Components call these and never do price arithmetic themselves. INR uses en-IN grouping (₹1,50,000).
 - The 2026 rate-card numbers are transcribed from the pricing guide as-is. Never round, merge, or "tidy" them.
-- Services without an entry in `RATE_SERVICE_MAP` keep their existing pricing path untouched.
+- Once `RATE_SERVICE_MAP` exists, services without an entry in it keep their existing pricing path untouched.
