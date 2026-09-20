@@ -47,3 +47,10 @@ value in a component, never introduce a new color:
 3. Page still renders with `testimonials` empty or any `content/*.ts`
    field missing — no crashes on placeholder data.
 4. Every commit stays deployable to Vercel as-is.
+
+## Pricing data rules
+- Prices live only in `src/content/pricing.ts` as whole-number integers (INR rupees; USD dollars for hourly rates). Never store or hardcode formatted strings like "₹1,50,000".
+- A source figure with a trailing "+" is `openEnded: true` on its range and renders with a "+".
+- All price formatting and premium/estimate math lives in `src/lib/pricing.ts` (`formatINR`, `formatRange`, `applyPremium`, `estimateRange`). Components call these and never do price arithmetic themselves. INR uses en-IN grouping (₹1,50,000).
+- The 2026 rate-card numbers are transcribed from the pricing guide as-is. Never round, merge, or "tidy" them.
+- Services without an entry in `RATE_SERVICE_MAP` keep their existing pricing path untouched.
