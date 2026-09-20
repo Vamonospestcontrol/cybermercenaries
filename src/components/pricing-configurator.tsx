@@ -3,8 +3,13 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { Check } from "lucide-react";
-import { pricing, RATE_SERVICE_MAP, RATE_TIERS } from "@/content/pricing";
-import type { RateRange, RateTierId } from "@/content/pricing";
+import {
+  pricing,
+  RATE_NOTES,
+  RATE_SERVICE_MAP,
+  RATE_TIERS,
+} from "@/content/pricing";
+import type { RatePremium, RateRange, RateTierId } from "@/content/pricing";
 import {
   type ServiceKey,
   computeEstimate,
@@ -12,8 +17,27 @@ import {
   formatINR,
   formatRange,
   getRole,
+  premiumsFor,
 } from "@/lib/pricing";
 import { cn } from "@/lib/utils";
+
+/**
+ * Flat add-ons that the 2026 rate card already prices through a premium.
+ * Hidden on rate-card ("mapped") services only, so the same work is never
+ * billed twice; services with no rate-card path keep them untouched.
+ */
+const SUPERSEDED_ADD_ON_IDS = ["security-review"];
+
+function isSupersededAddOn(id: string): boolean {
+  return SUPERSEDED_ADD_ON_IDS.includes(id);
+}
+
+/** e.g. "+20–40%", always derived from the premium's own min/max. */
+function premiumHint(premium: RatePremium): string {
+  return premium.minPct === premium.maxPct
+    ? `+${premium.minPct}%`
+    : `+${premium.minPct}–${premium.maxPct}%`;
+}
 
 export function PricingConfigurator() {
   const prefersReducedMotion = useReducedMotion();
@@ -23,6 +47,9 @@ export function PricingConfigurator() {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [scopeId, setScopeId] = useState<string>("");
   const [tier, setTier] = useState<RateTierId>("standard");
+  const [selectedPremiumIds, setSelectedPremiumIds] = useState<
+    RatePremium["id"][]
+  >([]);
 
   const service = useMemo(
     () => pricing.find((s) => s.key === activeService)!,
@@ -42,6 +69,31 @@ export function PricingConfigurator() {
   );
   const isMapped = !!rateRole && rateRole.rows.length > 0;
 
+  // On mapped services, add-ons already covered by a rate-card premium are
+  // hidden and dropped from the math so nothing is charged twice.
+  const visibleFeatures = useMemo(
+    () =>
+      isMapped
+        ? service.features.filter((f) => !isSupersededAddOn(f.id))
+        : service.features,
+    [isMapped, service],
+  );
+
+  // Premiums that apply to this role — empty for designer/frontend.
+  const ratePremiums = useMemo(
+    () => (isMapped && rateRoleId ? premiumsFor(rateRoleId) : []),
+    [isMapped, rateRoleId],
+  );
+
+  // Ignores any stale selection left over from another role.
+  const activePremiumIds = useMemo(
+    () =>
+      ratePremiums
+        .filter((premium) => selectedPremiumIds.includes(premium.id))
+        .map((premium) => premium.id),
+    [ratePremiums, selectedPremiumIds],
+  );
+
   // Falls back to the role's first row (default) when scopeId is empty/stale.
   const activeScopeId = useMemo(() => {
     if (!isMapped) return "";
@@ -49,16 +101,26 @@ export function PricingConfigurator() {
     return hasScope ? scopeId : rateRole!.rows[0].id;
   }, [isMapped, rateRole, scopeId]);
 
+  const activeRow = useMemo(
+    () => rateRole?.rows.find((row) => row.id === activeScopeId),
+    [rateRole, activeScopeId],
+  );
+
   const rateRange = useMemo<RateRange | null>(() => {
     if (!isMapped || !rateRoleId || !activeScopeId) return null;
-    return estimateRange({ roleId: rateRoleId, rowId: activeScopeId, tier });
-  }, [isMapped, rateRoleId, activeScopeId, tier]);
+    return estimateRange({
+      roleId: rateRoleId,
+      rowId: activeScopeId,
+      tier,
+      premiums: activePremiumIds,
+    });
+  }, [isMapped, rateRoleId, activeScopeId, tier, activePremiumIds]);
 
   // Fold one-time add-ons onto both ends of the rate range — same way the
   // generic path folds them into the base before spreading a range.
   const mappedRange = useMemo<RateRange | null>(() => {
     if (!rateRange) return null;
-    const oneTimeAddOns = service.features
+    const oneTimeAddOns = visibleFeatures
       .filter((f) => selectedIds.includes(f.id) && !f.recurring)
       .reduce((sum, f) => sum + f.priceDelta, 0);
     return {
@@ -66,7 +128,7 @@ export function PricingConfigurator() {
       max: rateRange.max + oneTimeAddOns,
       openEnded: rateRange.openEnded,
     };
-  }, [rateRange, service, selectedIds]);
+  }, [rateRange, visibleFeatures, selectedIds]);
 
   const useRatePath = isMapped && mappedRange !== null;
 
@@ -75,6 +137,19 @@ export function PricingConfigurator() {
       ? formatRange(mappedRange)
       : `${formatINR(estimate.rangeLow)} – ${formatINR(estimate.rangeHigh)}`;
 
+  // Caveat notes that only make sense on the rate-card path, so unmapped
+  // services keep their original single disclaimer line.
+  const rateNotes = useMemo(() => {
+    if (!useRatePath) return [];
+    return [
+      tier === "entry" ? RATE_NOTES.lowestCaveat : null,
+      RATE_NOTES.revisions,
+      RATE_NOTES.support,
+      activeRow?.soloScope ? RATE_NOTES.soloVsAgency : null,
+      RATE_NOTES.estimateDisclaimer,
+    ].filter((note): note is string => Boolean(note));
+  }, [useRatePath, tier, activeRow]);
+
   const handleServiceChange = (key: ServiceKey) => {
     setActiveService(key);
     setSelectedIds((prev) => {
@@ -82,6 +157,7 @@ export function PricingConfigurator() {
       const validIds = new Set(newService.features.map((f) => f.id));
       return prev.filter((id) => validIds.has(id));
     });
+    setSelectedPremiumIds([]);
     setScopeId("");
     setTier("standard");
   };
@@ -92,20 +168,31 @@ export function PricingConfigurator() {
     );
   };
 
+  const togglePremium = (id: RatePremium["id"]) => {
+    setSelectedPremiumIds((prev) =>
+      prev.includes(id) ? prev.filter((p) => p !== id) : [...prev, id],
+    );
+  };
+
   const waSummary = useMemo(() => {
-    const addOns = selectedIds
-      .map((id) => service.features.find((f) => f.id === id)?.label)
-      .filter(Boolean)
+    const addOns = visibleFeatures
+      .filter((f) => selectedIds.includes(f.id))
+      .map((f) => f.label)
       .join(", ");
 
     if (isMapped && mappedRange && rateRole) {
       const scopeLabel =
         rateRole.rows.find((row) => row.id === activeScopeId)?.label ?? "";
       const tierLabel = RATE_TIERS.find((t) => t.id === tier)?.label ?? "";
+      const premiumLabels = ratePremiums
+        .filter((premium) => activePremiumIds.includes(premium.id))
+        .map((premium) => premium.label)
+        .join(", ");
       return [
         `Hi, I'm interested in ${service.name}.`,
         `Scope: ${scopeLabel}, ${tierLabel} tier.`,
         `Estimated range: ${rangeText}${estimate.recurringTotal > 0 ? ` + ${formatINR(estimate.recurringTotal)}/month` : ""}.`,
+        premiumLabels ? `Premiums: ${premiumLabels}.` : "",
         addOns ? `Add-ons: ${addOns}.` : "",
         "I'd like to schedule a scoping call.",
       ]
@@ -125,9 +212,12 @@ export function PricingConfigurator() {
     service,
     estimate,
     selectedIds,
+    visibleFeatures,
     isMapped,
     mappedRange,
     rateRole,
+    ratePremiums,
+    activePremiumIds,
     activeScopeId,
     tier,
     rangeText,
@@ -256,7 +346,7 @@ export function PricingConfigurator() {
             <div>
               <h3 className="mb-3 text-sm font-medium text-ink">Add-ons</h3>
               <div className="space-y-3 sm:max-h-none max-h-[calc(100vh-280px)] overflow-y-auto pr-2 sm:pr-0 pb-4 sm:pb-0">
-                {service.features.map((feature) => {
+                {visibleFeatures.map((feature) => {
                   const isSelected = selectedIds.includes(feature.id);
                   return (
                     <button
@@ -304,6 +394,95 @@ export function PricingConfigurator() {
                 })}
               </div>
             </div>
+
+            {/* Rate-card premiums — only roles that carry any (never designer
+                or frontend, so no empty container is rendered). */}
+            {ratePremiums.length > 0 && (
+              <div>
+                <h3 className="mb-3 text-sm font-medium text-ink">Premiums</h3>
+                <div className="space-y-3">
+                  {ratePremiums.map((premium) => {
+                    const isSelected = activePremiumIds.includes(premium.id);
+                    return (
+                      <div
+                        key={premium.id}
+                        className={cn(
+                          "border p-4 transition-colors duration-150",
+                          isSelected
+                            ? "border-signal bg-signal/10"
+                            : "border-line bg-surface-2 hover:border-line-strong",
+                        )}
+                      >
+                        {/* Toggle and the disclosure are siblings: a
+                            <details> nested in a <button> is invalid and
+                            breaks keyboard/click handling. */}
+                        <button
+                          type="button"
+                          onClick={() => togglePremium(premium.id)}
+                          aria-pressed={isSelected}
+                          className="w-full min-h-[44px] text-left focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-signal"
+                        >
+                          <div className="flex items-start justify-between gap-3">
+                            <div className="min-w-0 flex-1">
+                              <span className="font-medium text-ink block break-words">
+                                {premium.label}
+                              </span>
+                              <p className="mt-1 text-sm text-ink-dim break-words">
+                                {premium.summary}
+                              </p>
+                              <p className="mt-2 text-sm text-ink-faint break-words">
+                                {premiumHint(premium)}
+                              </p>
+                            </div>
+                            <motion.div
+                              className={cn(
+                                "flex size-4 shrink-0 items-center justify-center border transition-colors duration-150 mt-0.5",
+                                isSelected
+                                  ? "border-signal bg-signal"
+                                  : "border-line-strong",
+                              )}
+                              animate={
+                                isSelected && !prefersReducedMotion
+                                  ? { scale: [1, 1.2, 1] }
+                                  : { scale: 1 }
+                              }
+                              transition={
+                                prefersReducedMotion
+                                  ? { duration: 0 }
+                                  : { duration: 0.2 }
+                              }
+                            >
+                              {isSelected && (
+                                <Check className="size-3 text-signal-ink" />
+                              )}
+                            </motion.div>
+                          </div>
+                        </button>
+                        <details className="mt-3 border-t border-line pt-3">
+                          <summary className="cursor-pointer text-xs text-ink-faint transition-colors duration-150 hover:text-ink-dim focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-signal">
+                            What this includes
+                          </summary>
+                          <ul className="mt-3 space-y-2">
+                            {premium.includes.map((item) => (
+                              <li
+                                key={item}
+                                className="flex items-start gap-2 text-xs text-ink-faint"
+                              >
+                                <Check
+                                  className="mt-0.5 size-3 shrink-0 text-signal"
+                                  aria-hidden="true"
+                                />
+                                {item}
+                              </li>
+                            ))}
+                          </ul>
+                        </details>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Estimate display - sticky bottom on mobile */}
@@ -356,9 +535,17 @@ export function PricingConfigurator() {
                 </AnimatePresence>
               )}
             </div>
-            <p className="mt-3 text-xs text-ink-faint">
-              Starting estimate — final quote after a short scoping call.
-            </p>
+            {rateNotes.length > 0 ? (
+              <ul className="mt-3 space-y-1 text-xs text-ink-faint">
+                {rateNotes.map((note) => (
+                  <li key={note}>{note}</li>
+                ))}
+              </ul>
+            ) : (
+              <p className="mt-3 text-xs text-ink-faint">
+                Starting estimate — final quote after a short scoping call.
+              </p>
+            )}
           </div>
 
           {/* CTA — wa.me with prefilled selection summary */}
